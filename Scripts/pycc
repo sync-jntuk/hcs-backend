@@ -1,0 +1,3 @@
+#!D:\flutter_projects\backend-flask\Scripts\python.exe
+from numba.pycc import main
+main()
