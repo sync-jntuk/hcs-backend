@@ -41,4 +41,4 @@ api.add_resource(NearByDoctors, '/nearby-doctors')
 api.add_resource(User, '/user')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
