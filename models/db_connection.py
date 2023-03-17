@@ -9,10 +9,8 @@ mydb = connect(
     auth_plugin='mysql_native_password'
 )
 
-db_cursor = mydb.cursor()
 
 def fetch_one(query):
-    data = {}
     db_cursor = mydb.cursor()
     try:
         db_cursor.execute(query)
@@ -21,8 +19,9 @@ def fetch_one(query):
         if not vals:
             return {"errno": 404}
         data = dict(zip(keys, vals))
-        db_cursor.close()
-    except:
+    except Exception as e:
+        data = {"message": str(e)}
+    finally:
         db_cursor.close()
     return data
 
@@ -36,7 +35,21 @@ def fetch_all(query):
         vals = db_cursor.fetchall()
         for row in vals:
             data.append(dict(zip(keys, row)))
+    except Exception as e:
+        data = {"message": str(e)}
+    finally:
         db_cursor.close()
-    except:
+    return data
+
+
+def upsert(query):
+    data = {"message": 200}
+    db_cursor = mydb.cursor()
+    try:
+        db_cursor.execute(query)
+        mydb.commit()
+    except Exception as e:
+        data = {"message": str(e)}
+    finally:
         db_cursor.close()
     return data

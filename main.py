@@ -24,14 +24,21 @@ class User(Resource):
         return UserModule.login(params)
 
 
-class NearByDoctors(Resource):
+class NearByItems(Resource):
     def post(self):
         params = dict(request.values)
-        return MapsModule.getNearByDoctors(params)
+        return MapsModule.getNearByItems(params)
+
+
+class UpsertItems(Resource):
+    def post(self):
+        params = dict(request.values)
+        return MapsModule.insertNewItem(params)
 
 
 api.add_resource(Root, '/')
-api.add_resource(NearByDoctors, '/nearby-doctors')
+api.add_resource(NearByItems, '/nearbyitems')
+api.add_resource(UpsertItems, '/updateitems')
 api.add_resource(User, '/user')
 
 if __name__ == '__main__':
