@@ -22,6 +22,8 @@ class UserModule:
             and password = '{params['PassWord']}'
         """
         data = fetch_one(query)
+        if 'patient_id' not in data:
+            return {"errno": 404}
         patient_id = data['patient_id']
         field_maps = {
             "Patient Id": "patient_id",
@@ -55,6 +57,5 @@ class UserModule:
         """
         rdata = fetch_one(query)
         rdata['patient_dob'] = str(rdata['patient_dob'])
-        data = {k: rdata[v] for k, v in field_maps.items()}
-        print(data)
+        data = {k: rdata.get(v, "") for k, v in field_maps.items()}
         return data

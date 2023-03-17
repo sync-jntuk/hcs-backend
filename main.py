@@ -17,21 +17,15 @@ class Root(Resource):
         print(count)
         return {'message': f'Hello from Server [ Count: {count} ]'}
 
-    def post():
-        print('sandy-blaze')
-        data = request.data
-        print(data)
-        return {'msg': 'Hello'}
-
 
 class User(Resource):
-    def get(self):
+    def post(self):
         params = dict(request.values)
         return UserModule.login(params)
 
 
 class NearByDoctors(Resource):
-    def get(self):
+    def post(self):
         params = dict(request.values)
         return MapsModule.getNearByDoctors(params)
 
