@@ -3,6 +3,7 @@ from flask import request
 from flask_restful import Api, Resource
 from modules.user import UserModule
 from modules.nearby import MapsModule
+from modules.doctor import DoctorModule
 
 app = Flask(__name__)
 api = Api(app)
@@ -24,6 +25,12 @@ class User(Resource):
         return UserModule.login(params)
 
 
+class DoctorDetails(Resource):
+    def post(self):
+        params = dict(request.values)
+        return DoctorModule.details(params)
+
+
 class NearByItems(Resource):
     def post(self):
         params = dict(request.values)
@@ -39,6 +46,7 @@ class UpsertItems(Resource):
 api.add_resource(Root, '/')
 api.add_resource(NearByItems, '/nearbyitems')
 api.add_resource(UpsertItems, '/updateitems')
+api.add_resource(DoctorDetails, '/doctordetails')
 api.add_resource(User, '/user')
 
 if __name__ == '__main__':
