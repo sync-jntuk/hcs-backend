@@ -15,7 +15,6 @@ class Root(Resource):
     def get(self):
         global count
         count += 1
-        print(count)
         return {'message': f'Hello from Server [ Count: {count} ]'}
 
 
