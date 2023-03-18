@@ -25,6 +25,18 @@ class User(Resource):
         return UserModule.login(params)
 
 
+class Appointment(Resource):
+    def post(self):
+        params = dict(request.values)
+        return UserModule.bookAppointment(params)
+
+
+class GetAppointment(Resource):
+    def post(self):
+        params = dict(request.values)
+        return UserModule.getAppointment(params)
+
+
 class DoctorDetails(Resource):
     def post(self):
         params = dict(request.values)
@@ -44,10 +56,12 @@ class UpsertItems(Resource):
 
 
 api.add_resource(Root, '/')
+api.add_resource(User, '/userlogin')
 api.add_resource(NearByItems, '/nearbyitems')
 api.add_resource(UpsertItems, '/updateitems')
 api.add_resource(DoctorDetails, '/doctordetails')
-api.add_resource(User, '/user')
+api.add_resource(Appointment, '/bookappointment')
+api.add_resource(GetAppointment, '/getappointment')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

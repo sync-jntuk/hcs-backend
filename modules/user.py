@@ -1,5 +1,5 @@
 from .validate import is_valid
-from models.db_connection import fetch_one
+from models.db_connection import fetch_one, upsert, fetch_all
 
 
 class UserModule:
@@ -58,4 +58,42 @@ class UserModule:
         rdata = fetch_one(query)
         rdata['patient_dob'] = str(rdata['patient_dob'])
         data = {k: rdata.get(v, "") for k, v in field_maps.items()}
+        return data
+
+    def bookAppointment(params):
+        if not is_valid(params):
+            return {"errno": 403}
+        required = [
+            'doctor_id', 'patient_id', 'appointment_date', 'appointment_time'
+        ]
+        for i in required:
+            if i not in params:
+                return {"errno": 403}
+        query = f"""
+            insert into appointments set
+            doctor_id = '{params['doctor_id']}',
+            patient_id = '{params['patient_id']}',
+            appointment_date = '{params['appointment_date']}',
+            appointment_time = '{params['appointment_time']}'
+        """
+        data = upsert(query)
+        return data
+
+    def getAppointment(params):
+        if not is_valid(params):
+            return {"errno": 403}
+        required = [
+            'patient_id'
+        ]
+        for i in required:
+            if i not in params:
+                return {"errno": 403}
+        query = f"""
+            select * from appointments
+            where patient_id = '{params['patient_id']}'
+        """
+        data = fetch_all(query)
+        for row in data:
+            row['appointment_date'] = str(row['appointment_date'])
+            row['appointment_time'] = str(row['appointment_time'])
         return data
