@@ -57,7 +57,7 @@ class UserModule:
         """
         rdata = fetch_one(query)
         rdata['patient_dob'] = str(rdata['patient_dob'])
-        data = {k: rdata.get(v, "") for k, v in field_maps.items()}
+        data = {k: (rdata.get(v, "xxxx") or "xxxx") for k, v in field_maps.items()}
         return data
 
     def bookAppointment(params):

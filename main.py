@@ -1,5 +1,5 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request
+from flask_cors import CORS
 from flask_restful import Api, Resource
 from modules.user import UserModule
 from modules.nearby import MapsModule
@@ -7,6 +7,7 @@ from modules.doctor import DoctorModule
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 count = 0
 
