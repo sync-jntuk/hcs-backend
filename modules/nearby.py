@@ -1,5 +1,7 @@
 from .validate import is_valid
 from models.db_connection import fetch_all, upsert
+from .doctor import DoctorModule
+from .hospital import HospitalModule
 
 
 class MapsModule:
@@ -10,8 +12,11 @@ class MapsModule:
                 return {"errno": 403}
         if not is_valid(params):
             return {"errno": 403}
-        lat, long, range = params['lat'], params['long'], params['range']
-        degree_width, limit = 111, int(int(range) / 2 + 0.5)
+        roles = ['doctor', 'physiotherapist', 'nurse', 'hospital']
+        if params['role_name'] not in roles:
+            return {"errno": 403}
+        lat, long, kmrange = params['lat'], params['long'], params['range']
+        degree_width, limit = 111, int(int(kmrange) / 2 + 0.5)
         k_lat = int(float(lat) * degree_width / 2)
         k_long = int(float(long) * degree_width / 2)
         query = f"""
@@ -23,6 +28,12 @@ class MapsModule:
             and role_name = '{params['role_name']}'
         """
         data = fetch_all(query)
+        if params['role_name'] == 'doctor':
+            for row in data:
+                row['doctor_details'] = DoctorModule.details(
+                    {'doctor_id': str(row['id'])})
+                row['hospital_details'] = HospitalModule.details(
+                    {'hospital_id': str(row['doctor_details'].get('doctor_hospital_id', "-1"))})
         return data
 
     def insertNewItem(params):
@@ -31,6 +42,9 @@ class MapsModule:
             if i not in params:
                 return {"errno": 403}
         if not is_valid(params):
+            return {"errno": 403}
+        roles = ['doctor', 'physiotherapist', 'nurse', 'hospital']
+        if params['role_name'] not in roles:
             return {"errno": 403}
         degree_width = 111
         lat, long = params['lat'], params['long']

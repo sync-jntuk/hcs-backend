@@ -69,6 +69,7 @@ class UserModule:
         for i in required:
             if i not in params:
                 return {"errno": 403}
+        params['appointment_date'] = '-'.join(params['appointment_date'].split('-')[::-1])
         query = f"""
             insert into appointments set
             doctor_id = '{params['doctor_id']}',

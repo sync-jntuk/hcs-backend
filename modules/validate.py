@@ -10,7 +10,7 @@ def is_valid(data):
         return True
     elif str(type(data)) == "<class 'dict'>":
         for k, v in data.items():
-            if k.find("'") != -1 or v.find("'") != -1:
+            if (k.find("'") != -1) or v.find("'") != -1:
                 return False
         return True
     else:
