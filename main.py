@@ -26,6 +26,11 @@ class User(Resource):
         return UserModule.login(params)
 
 
+class UserRegister(Resource):
+    def post(self):
+        params = dict(request.values)
+        return UserModule.create(params)
+
 class Appointment(Resource):
     def post(self):
         params = dict(request.values)
@@ -42,7 +47,8 @@ class DoctorDetails(Resource):
     def post(self):
         params = dict(request.values)
         return DoctorModule.details(params)
-    
+
+
 class NurseRegister(Resource):
     def post(self):
         params = dict(request.values)
@@ -63,6 +69,7 @@ class InsertItems(Resource):
 
 api.add_resource(Root, '/')
 api.add_resource(User, '/userlogin')
+api.add_resource(UserRegister, '/user/register')
 api.add_resource(Appointment, '/bookappointment')
 api.add_resource(GetAppointment, '/getappointment')
 api.add_resource(DoctorDetails, '/doctordetails')

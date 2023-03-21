@@ -53,3 +53,17 @@ def insert(query):
     finally:
         db_cursor.close()
     return data
+
+
+def insert_many(queries):
+    data = {"message": 200}
+    db_cursor = mydb.cursor()
+    try:
+        for query in queries:
+            db_cursor.execute(query)
+        mydb.commit()
+    except Exception as e:
+        data = {"message": str(e)}
+    finally:
+        db_cursor.close()
+    return data

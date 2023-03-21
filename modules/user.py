@@ -1,8 +1,35 @@
 from .validate import is_valid
-from models.db_connection import fetch_one, insert, fetch_all
+from models.db_connection import fetch_one, insert, fetch_all, insert_many
 
 
 class UserModule:
+    def create(params):
+        if not is_valid(params):
+            return {"errno": 403}
+        required = [
+            'patient_first_name', 'patient_middle_name', 'patient_last_name', 'patient_dob', 'patient_gender',
+            'patient_blood_group', 'patient_aadhar', 'patient_pan_number', 'patient_voter_id', 'patient_occupation',
+            'patient_primary_address', 'patient_mail', 'bank_name', 'branch_name', 'ifsc_code',
+            'bank_account_number', 'patient_phone_number'
+        ]
+        for i in required:
+            if i not in params:
+                return {"errno": 403}
+        patient_id = fetch_one("select * from master_count where master_name = 'patients'")
+        if 'master_count' not in patient_id:
+            return {"errno": 403}
+        patient_id = '23' + str(int(patient_id['master_count']) + 1).rjust(6, '0')
+        query = f"""
+            insert into patient_master set patient_id = '{patient_id}',
+        """
+        for key, value in params.items():
+            query += f"{key} = '{value}', "
+        query = query[:-2]
+        data = insert_many(
+            [query, "update master_count set master_count = master_count + 1 where master_name = 'patients'"])
+        return data
+
+
     def login(params):
         if not is_valid(params):
             return {"errno": 403}
@@ -57,7 +84,8 @@ class UserModule:
         """
         rdata = fetch_one(query)
         rdata['patient_dob'] = str(rdata['patient_dob'])
-        data = {k: (rdata.get(v, "xxxx") or "xxxx") for k, v in field_maps.items()}
+        data = {k: (rdata.get(v, "xxxx") or "xxxx")
+                for k, v in field_maps.items()}
         return data
 
     def bookAppointment(params):
@@ -69,7 +97,8 @@ class UserModule:
         for i in required:
             if i not in params:
                 return {"errno": 403}
-        params['appointment_date'] = '-'.join(params['appointment_date'].split('-')[::-1])
+        params['appointment_date'] = '-'.join(
+            params['appointment_date'].split('-')[::-1])
         query = f"""
             insert into appointments set
             doctor_id = '{params['doctor_id']}',
