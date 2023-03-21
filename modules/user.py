@@ -1,5 +1,5 @@
 from .validate import is_valid
-from models.db_connection import fetch_one, upsert, fetch_all
+from models.db_connection import fetch_one, insert, fetch_all
 
 
 class UserModule:
@@ -77,7 +77,7 @@ class UserModule:
             appointment_date = '{params['appointment_date']}',
             appointment_time = '{params['appointment_time']}'
         """
-        data = upsert(query)
+        data = insert(query)
         return data
 
     def getAppointment(params):

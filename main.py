@@ -4,6 +4,7 @@ from flask_restful import Api, Resource
 from modules.user import UserModule
 from modules.nearby import MapsModule
 from modules.doctor import DoctorModule
+from modules.nurse import NurseModule
 
 app = Flask(__name__)
 api = Api(app)
@@ -41,6 +42,11 @@ class DoctorDetails(Resource):
     def post(self):
         params = dict(request.values)
         return DoctorModule.details(params)
+    
+class NurseRegister(Resource):
+    def post(self):
+        params = dict(request.values)
+        return NurseModule.create(params)
 
 
 class NearByItems(Resource):
@@ -49,7 +55,7 @@ class NearByItems(Resource):
         return MapsModule.getNearByItems(params)
 
 
-class UpsertItems(Resource):
+class InsertItems(Resource):
     def post(self):
         params = dict(request.values)
         return MapsModule.insertNewItem(params)
@@ -57,11 +63,12 @@ class UpsertItems(Resource):
 
 api.add_resource(Root, '/')
 api.add_resource(User, '/userlogin')
-api.add_resource(NearByItems, '/nearbyitems')
-api.add_resource(UpsertItems, '/updateitems')
-api.add_resource(DoctorDetails, '/doctordetails')
 api.add_resource(Appointment, '/bookappointment')
 api.add_resource(GetAppointment, '/getappointment')
+api.add_resource(DoctorDetails, '/doctordetails')
+api.add_resource(NurseRegister, '/nurse/register')
+api.add_resource(NearByItems, '/nearbyitems')
+api.add_resource(InsertItems, '/insertitems')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

@@ -42,7 +42,7 @@ def fetch_all(query):
     return data
 
 
-def upsert(query):
+def insert(query):
     data = {"message": 200}
     db_cursor = mydb.cursor()
     try:

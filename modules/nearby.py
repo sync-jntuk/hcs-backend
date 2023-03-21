@@ -1,5 +1,5 @@
 from .validate import is_valid
-from models.db_connection import fetch_all, upsert
+from models.db_connection import fetch_all, insert
 from .doctor import DoctorModule
 from .hospital import HospitalModule
 
@@ -57,5 +57,5 @@ class MapsModule:
             latitude = {lat}, longitude = {long}, id = {_id},
             role_name = '{role_name}'
         """
-        data = upsert(query)
+        data = insert(query)
         return data
